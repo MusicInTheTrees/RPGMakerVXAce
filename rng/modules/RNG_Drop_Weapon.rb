@@ -74,7 +74,7 @@ class RNG_Drop_Weapon
   def get_weapon_ascension(startAscension = 0)
     ascension = @rng_weapon_asc.rng_ascension(startAscension)
     
-    wpnIdx = @m_wpnDbInitIdx + ascension
+    wpnIdx = @wpnDbInitIdx + ascension
     
     weapon = $data_weapons[wpnIdx]
     

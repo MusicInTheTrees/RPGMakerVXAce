@@ -107,7 +107,7 @@ class RNG_Expo_Step
     return val
   end
   
-  def rng_ascension(initAscLvl = 0, useHandicap = false)
+  def rng_ascension(initAscLvl = 0, useHandicap = false, maxAscLvl = nil)
     # ascension is the step in expo_step
     # the ascension level or step level is used in the 
     # exponent value of the curve
@@ -135,27 +135,39 @@ class RNG_Expo_Step
       end
     end
     
-    range = Array.new(@rngAscendLimit - initAscLvl) { |i| i }
+    # Check if the user has set an alternative limit
+    limit = @rngAscendLimit
+    if (maxAscLvl != nil)
+      limit = maxAscLvl
+    end
     
-    for ascension in range do
-      # Guess a value from [0, 100]
-      ascGuess = rand(101)
+    # evaluate range of ascension
+    size = limit - initAscLvl
+    
+    # if size is legitimate
+    if size > 0
+      range = Array.new(limit - initAscLvl) { |i| i }
       
-      if (true == useHandicap)
-        handicapRngAscendPercent += @rngAscendHandicapStep
+      for ascension in range do
+        # Guess a value from [0, 100]
+        ascGuess = rand(101)
         
-        # Coerce - Leave atleast 1% change
-        if (handicapRngAscendPercent > 0.99)
-          handicapRngAscendPercent = 0.99          
+        if (true == useHandicap)
+          handicapRngAscendPercent += @rngAscendHandicapStep
+          
+          # Coerce - Leave atleast 1% change
+          if (handicapRngAscendPercent > 0.99)
+            handicapRngAscendPercent = 0.99          
+          end
+          
+          ascThreshold = (handicapRngAscendPercent * 100).round
         end
         
-        ascThreshold = (handicapRngAscendPercent * 100).round
-      end
-      
-      # we've reached the highest ascention level
-      # if the guess isn't greater than the threshold
-      if (ascGuess < ascThreshold)
-        break
+        # we've reached the highest ascention level
+        # if the guess isn't greater than the threshold
+        if (ascGuess < ascThreshold)
+          break
+        end
       end
     end
     
