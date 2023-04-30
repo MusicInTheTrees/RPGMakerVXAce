@@ -1,31 +1,23 @@
 #==============================================================================
-# ** RNG_Drop_Weapon
-#------------------------------------------------------------------------------
+#
+# ⌠ 
+# │ Module:.... RNG_Drop_Weapon
+# │ Author:.... MusicInTheTrees
+# │ Created:... 28 April 2023
+# │ Version:... 1.0
+# ⌡
+#
+# -- Description
 #  This class returns an arbitrary weapon given a few parameters.
 #  These parameters are very specific to how the user places the weapons
-#   in the database. 
-#  This script MUST be updated as the user updates
-#   their weapon database.
-#  Params:
-#    + Weapon Type (assuming a region of the database. e.g. list of daggers)
-#    + Weapon Type Version (Which dagger, in list of daggers, for example)
-#    + Min Weapon Type Version Class
-#      - (i.e. having multiple versions of the same dagger, but with different
-#              power levels/names
+#  in the database.
 #==============================================================================
-
-#require "RNG_Expo_Step"
-#include RNG_Expo_Step
 
 class RNG_Drop_Weapon
   #--------------------------------------------------------------------------
   # * Public Instance Variables
   #--------------------------------------------------------------------------
-  @rng_weapon_atk = RNG_Expo_Step.new
-  @rng_weapon_asc = RNG_Expo_Step.new
-  
-  attr_accessor :m_wpnDbInitIdx
-  attr_accessor :m_wpnTypeCount
+  attr_accessor :wpnDbInitIdx
   
   #--------------------------------------------------------------------------
   # * Constants
@@ -33,30 +25,42 @@ class RNG_Drop_Weapon
   IDX_ATK = 2
   
   #--------------------------------------------------------------------------
-  # * Class Methods
+  # * Methods
   #--------------------------------------------------------------------------
   def initialize(wpnDbInitIdx, wpnTypeCount)
-    super()
+    
+    @rng_weapon_atk = RNG_Expo_Step.new
+    @rng_weapon_asc = RNG_Expo_Step.new
     
     # init 'wpnDbInitIdx'
     if wpnDbInitIdx == nil
-      @m_wpnDbInitIdx = 0
+      @wpnDbInitIdx = 0
       err("wpnDbInitIdx parameter was nil")
     else
-      @m_wpnDbInitIdx = wpnDbInitIdx
+      @wpnDbInitIdx = wpnDbInitIdx
     end
     
     # init 'wpnTypeCount'
     if wpnTypeCount == nil || wpnTypeCount < 0
-      @m_wpnTypeCount = 0
+      @wpnTypeCount = 0
       err("wpnTypeCount parameter was nil OR 0")
     else
-      @m_wpnTypeCount = wpnTypeCount
+      @wpnTypeCount = wpnTypeCount
     end
     
     # update RNG parameters
-    @rng_weapon_atk.rngAscendLimit(wpnTypeCount)
-    @rng_weapon_asc.rngAscendLimit(wpnTypeCount)    
+    @rng_weapon_atk.rngAscendLimit = wpnTypeCount
+    @rng_weapon_asc.rngAscendLimit = wpnTypeCount
+  end
+  
+  def m_wpnTypeCount
+    @m_wpnTypeCount
+  end
+  
+  def wpnTypeCount=(value)
+    @wpnTypeCount = value
+    @rng_weapon_atk.rngAscendLimit = @wpnTypeCount
+    @rng_weapon_asc.rngAscendLimit = @wpnTypeCount
   end
   
   def test
@@ -70,7 +74,7 @@ class RNG_Drop_Weapon
   def get_weapon_ascension(startAscension = 0)
     ascension = @rng_weapon_asc.rng_ascension(startAscension)
     
-    wpnIdx = attr_accessor + ascension
+    wpnIdx = @m_wpnDbInitIdx + ascension
     
     weapon = $data_weapons[wpnIdx]
     
@@ -87,9 +91,5 @@ class RNG_Drop_Weapon
     puts "ERROR: (RNG_Drop_Weapon) " + errStr
     
   end
-  
-  
-  
-  
   
 end
