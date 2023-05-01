@@ -26,7 +26,21 @@ class RNG_Generate_Weapon
     $data_weapons[@GENERATE_START_INDEX, delta]
   end
   
-  def create_weapon
+  def copy_wpn_data(to, from)
+    # copy everything but the id
+    to.name = from.name
+    to.wtype_id = from.wtype_id
+    to.animation_id = from.animation_id
+    to.params = from.params.dup
+    to.price = from.price
+    to.etype_id = from.etype_id
+    to.icon_index = from.icon_index
+    to.description = from.description
+    to.features = from.features
+    to.note = from.note
+  end
+  
+  def generate_weapon(copyWpn = nil)
     wpn = RPG::Weapon.new
     
     $data_weapons.push(wpn)
@@ -34,6 +48,10 @@ class RNG_Generate_Weapon
     id = $data_weapons.length - 1
     
     wpn.id = id
+    
+    if (copyWpn != nil)
+      copy_wpn_data(wpn, copyWpn)
+    end
     
     id    
   end
@@ -43,12 +61,19 @@ class RNG_Generate_Weapon
   end
   
   def test
-    newWpnIdx = create_weapon
+    newWpnIdx = generate_weapon
     wpn = $data_weapons[newWpnIdx]
     wpn.params[2] = 10
     wpn.name = "TEST"
     wpn.wtype_id = 7 # dagger
     puts "Generated weapon name: " + wpn.name
+    add_wpn_to_party(wpn)
+    
+    # Create a second weapon with the same name BUT different stats
+    wpn = $data_weapons[generate_weapon]
+    wpn.params[2] = 500
+    wpn.name = "TEST"
+    wpn.wtype_id = 7
     add_wpn_to_party(wpn)
   end
   

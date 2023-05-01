@@ -64,14 +64,28 @@ class RNG_Drop_Weapon
   end
   
   def test
-    puts 'Drop_Weapons debug'
+    run_test = 2
     
-    puts $data_weapons[2].name
-    puts $data_weapons[2].params[IDX_ATK].to_s
+    if run_test == 0
+      puts 'Drop_Weapons debug'
+      
+      puts $data_weapons[2].name
+      puts $data_weapons[2].params[IDX_ATK].to_s
+    elsif run_test == 1
+      t = get_weapon_attack(4)
+      puts "get_weapon_attack[0] = " + t[0].to_s
+      puts "get_weapon_attack[1] = " + t[1].to_s
+      
+    elsif run_test == 2
+      t = get_weapon_version(3)
+      puts "get_weapon_version[0] = " + t[0].to_s
+      puts "get_weapon_version[1] = " + t[1].to_s
+      
+    end
     
   end
   
-  def get_weapon_ascension(startAscension = 0)
+  def get_weapon_version(startAscension = 0)
     ascension = @rng_weapon_asc.rng_ascension(startAscension)
     
     wpnIdx = @wpnDbInitIdx + ascension
@@ -83,9 +97,20 @@ class RNG_Drop_Weapon
       return false
     end
     
-    return weapon
+    return weapon, ascension
   end
   
+  def get_weapon_attack(startAscension = 0, scalar = -1)
+    if scalar >= 0
+      @rng_weapon_atk.rngScalar = scalar
+    end
+    atk = @rng_weapon_atk.run(startAscension)
+    return atk[0], atk[1]
+  end
+  
+  def get_weapon_grade(ascensionLevel, atk)
+    return @rng_weapon_atk.rng_grade(ascensionLevel, atk)
+  end  
   
   def err(errStr)
     puts "ERROR: (RNG_Drop_Weapon) " + errStr

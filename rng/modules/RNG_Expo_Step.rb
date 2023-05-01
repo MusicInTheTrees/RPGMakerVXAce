@@ -87,7 +87,7 @@ class RNG_Expo_Step
   
   
   def initialize
-    @rngParamDefaultSet = RNG_PARAMETERS_SET_1
+    @rngParamDefaultSet = RNG_PARAMETERS_SET_1.dup
     reset
   end
   
@@ -107,6 +107,54 @@ class RNG_Expo_Step
     return val
   end
   
+  def pure_curve(initAscLvl = 0)
+    # check bounds of initAscLvl - min level is 1
+    initAscLvl = coerce(initAscLvl, 1, @rngAscendLimit)
+    
+    # The exponent is dependend on the initial ascension / step level
+    # and some scalar factor
+    exponent = initAscLvl * @rngExponentFactor
+      
+    # Calc curve = scalar + base ^ (exp * factor)
+    curve = @rngScalar + @rngBase ** exponent
+  end
+  
+  def left_of_center(center)
+    (@rngBoundFactor * center).round
+  end
+  
+  def right_of_center(center)
+    (center * (2 - @rngBoundFactor)).round
+  end
+  
+  def rng_grade(ascensionLevel, rngVal)
+    curve = pure_curve(ascensionLevel)
+    center = curve# - @rngScalar
+    
+    max_val = @rngScalar + right_of_center(center)
+    
+    # S = >0.98
+    # A = >0.9
+    # B = >0.8
+    # C = >0.7
+    # D = >0.6
+    # F = > 0.5
+    
+    if rngVal < (0.6 * max_val)
+      return "F"
+    elsif rngVal < (0.7 * max_val)
+      return "D"
+    elsif rngVal < (0.8 * max_val)
+      return "C"
+    elsif rngVal < (0.9 * max_val)
+      return "B"
+    elsif rngVal < (0.98 * max_val)
+      return "A"
+    else
+      return "S"
+    end
+  end
+  
   def rng_ascension(initAscLvl = 0, useHandicap = false, maxAscLvl = nil)
     # ascension is the step in expo_step
     # the ascension level or step level is used in the 
@@ -116,7 +164,7 @@ class RNG_Expo_Step
     initAscLvl = coerce(initAscLvl, 0, @rngAscendLimit)
     
     # The return ascension level
-    ascension = 0
+    ascension = initAscLvl
     
     # Set value such that 'ascGuess' must be greater than to ascend a step
     ascThreshold = (@rngAscendPercent * 100).round
@@ -148,7 +196,7 @@ class RNG_Expo_Step
     if size > 0
       range = Array.new(limit - initAscLvl) { |i| i }
       
-      for ascension in range do
+      for i in range do
         # Guess a value from [0, 100]
         ascGuess = rand(101)
         
@@ -167,6 +215,8 @@ class RNG_Expo_Step
         # if the guess isn't greater than the threshold
         if (ascGuess < ascThreshold)
           break
+        else
+          ascension += 1
         end
       end
     end
@@ -179,27 +229,30 @@ class RNG_Expo_Step
     # initAscLvl = Initial Ascention Level = Starting stage of the ascention
     #              level (i.e. game stage).
     
-    # check bounds of initAscLvl
-    initAscLvl = coerce(initAscLvl, 0, @rngAscendLimit)
+    # check bounds of initAscLvl - min level is 1
+    initAscLvl = coerce(initAscLvl, 1, @rngAscendLimit)
     
     # The exponent is dependend on the initial ascension / step level
     # and some scalar factor
-    exponent = rng_ascension(initAscLvl, useHandicap).to_f * @rngExponentFactor
+    ascensionLevel = rng_ascension(initAscLvl, useHandicap)
+    exponent = ascensionLevel * @rngExponentFactor
       
     # Calc center = base ^ (exp * factor)
-    center = @rngBase.to_f ** exponent
+    center = @rngBase ** exponent
     
     # Lower bound of RNG
-    left = (@rngBoundFactor.to_f * center).round
+    left = (@rngBoundFactor * center).round
     
     # Upper bound of RNG
-    right = (center * (2 - @rngBoundFactor.to_f)).round
+    right = (center * (2 - @rngBoundFactor)).round
     
     # Output RNG value
     rng = ((left + rand(right - left))).round
     
     # Final value
     rng = @rngScalar + rng
+    
+    return rng, ascensionLevel
     
   end
   
