@@ -43,22 +43,22 @@ class RNG_Expo_Step
   # number once the center value is found
   attr_accessor :rngBoundFactor
   
-  # rngAscendPercent: this will determine what the difficulty in ascending to
+  # rngStepPercent: this will determine what the difficulty in stepping up to
   # the next round of random number gen is
   # 0.73 is good for startLevel = 0
-  # NOTE: It is recommended this value increases up as 'initAscLvl' increases
+  # NOTE: It is recommended this value increases up as 'initStepLvl' increases
   #       This is becuase the the RNG value increases exponentially, so it
   #       should be more difficult to reach high ascention levels
-  attr_accessor :rngAscendPercent
+  attr_accessor :rngStepPercent
   
-  # rngAscendLimit: This determines how many times the random gen
-  # loop can ascend (i.e. stages of your game)
+  # rngStepLimit: This determines how many times the random gen
+  # loop can ascend a step (i.e. stages of your game)
   # It ultimately decides how large of a number can be generated
-  attr_accessor :rngAscendLimit
+  attr_accessor :rngStepLimit
   
-  # rngAscendHandicapStep: This value is (optionally)added to 'rngAscendPercent'
-  # as the value of 'initAscLvl' increases
-  attr_accessor :rngAscendHandicapStep
+  # rngStepHandicapStep: This value is (optionally)added to 'rngStepPercent'
+  # as the value of 'initStepLvl' increases
+  attr_accessor :rngStepHandicapStep
   
   # rngParamDefaultSet: This is the default array of values used to quickly
   # set the curve parameters. It is based on my own heuristic testing.
@@ -73,9 +73,9 @@ class RNG_Expo_Step
   IDX_BASE                 = 1
   IDX_EXPONENT_FACTOR      = 2
   IDX_BOUND_FACTOR         = 3
-  IDX_ASCEND_PERC          = 4
-  IDX_ASCEND_LIMIT         = 5
-  IDX_ASCEND_HANDICAP_STEP = 6
+  IDX_STEP_PERC            = 4
+  IDX_STEP_LIMIT           = 5
+  IDX_STEP_HANDICAP_STEP   = 6
   
   # NOTE: The steps chance increases linearly, but the values within the steps
   #       increase exponentially.
@@ -96,9 +96,9 @@ class RNG_Expo_Step
     @rngBase               = @rngParamDefaultSet[IDX_BASE]
     @rngExponentFactor     = @rngParamDefaultSet[IDX_EXPONENT_FACTOR]
     @rngBoundFactor        = @rngParamDefaultSet[IDX_BOUND_FACTOR]
-    @rngAscendPercent      = @rngParamDefaultSet[IDX_ASCEND_PERC]
-    @rngAscendLimit        = @rngParamDefaultSet[IDX_ASCEND_LIMIT]
-    @rngAscendHandicapStep = @rngParamDefaultSet[IDX_ASCEND_HANDICAP_STEP]
+    @rngStepPercent        = @rngParamDefaultSet[IDX_STEP_PERC]
+    @rngStepLimit          = @rngParamDefaultSet[IDX_STEP_LIMIT]
+    @rngStepHandicapStep   = @rngParamDefaultSet[IDX_STEP_HANDICAP_STEP]
   end
   
   def coerce(val, lwr, upr)
@@ -107,13 +107,13 @@ class RNG_Expo_Step
     return val
   end
   
-  def pure_curve(initAscLvl = 0)
-    # check bounds of initAscLvl - min level is 1
-    initAscLvl = coerce(initAscLvl, 1, @rngAscendLimit)
+  def pure_curve(initStepLvl = 0)
+    # check bounds of initStepLvl - min level is 1
+    initStepLvl = coerce(initStepLvl, 1, @rngStepLimit)
     
     # The exponent is dependend on the initial ascension / step level
     # and some scalar factor
-    exponent = initAscLvl * @rngExponentFactor
+    exponent = initStepLvl * @rngExponentFactor
       
     # Calc curve = scalar + base ^ (exp * factor)
     curve = @rngScalar + @rngBase ** exponent
@@ -155,60 +155,60 @@ class RNG_Expo_Step
     end
   end
   
-  def rng_ascension(initAscLvl = 0, useHandicap = false, maxAscLvl = nil)
+  def rng_ascension(initStepLvl = 0, useHandicap = false, maxAscLvl = nil)
     # ascension is the step in expo_step
     # the ascension level or step level is used in the 
     # exponent value of the curve
     
     # Coerce / bound the initial ascension level
-    initAscLvl = coerce(initAscLvl, 0, @rngAscendLimit)
+    initStepLvl = coerce(initStepLvl, 0, @rngStepLimit)
     
     # The return ascension level
-    ascension = initAscLvl
+    ascension = initStepLvl
     
     # Set value such that 'ascGuess' must be greater than to ascend a step
-    ascThreshold = (@rngAscendPercent * 100).round
+    ascThreshold = (@rngStepPercent * 100).round
     
     # handicap percent value that increases as the ascension level increases
-    handicapRngAscendPercent = @rngAscendPercent
+    handicapRngStepPercent = @rngStepPercent
     
     # Initial handicap calculation
     if (true == useHandicap)
       # increase the difficulty based on the initial ascension level
-      handicapRngAscendPercent = initAscLvl * @rngAscendHandicapStep
+      handicapRngStepPercent = initStepLvl * @rngStepHandicapStep
       
       # Coerce - Leave atleast 1% change
-      if (handicapRngAscendPercent > 0.99)
-        handicapRngAscendPercent = 0.99          
+      if (handicapRngStepPercent > 0.99)
+        handicapRngStepPercent = 0.99          
       end
     end
     
     # Check if the user has set an alternative limit
-    limit = @rngAscendLimit
+    limit = @rngStepLimit
     if (maxAscLvl != nil)
       limit = maxAscLvl
     end
     
     # evaluate range of ascension
-    size = limit - initAscLvl
+    size = limit - initStepLvl
     
     # if size is legitimate
     if size > 0
-      range = Array.new(limit - initAscLvl) { |i| i }
+      range = Array.new(limit - initStepLvl) { |i| i }
       
       for i in range do
         # Guess a value from [0, 100]
         ascGuess = rand(101)
         
         if (true == useHandicap)
-          handicapRngAscendPercent += @rngAscendHandicapStep
+          handicapRngStepPercent += @rngStepHandicapStep
           
           # Coerce - Leave atleast 1% change
-          if (handicapRngAscendPercent > 0.99)
-            handicapRngAscendPercent = 0.99          
+          if (handicapRngStepPercent > 0.99)
+            handicapRngStepPercent = 0.99          
           end
           
-          ascThreshold = (handicapRngAscendPercent * 100).round
+          ascThreshold = (handicapRngStepPercent * 100).round
         end
         
         # we've reached the highest ascention level
@@ -225,16 +225,16 @@ class RNG_Expo_Step
     
   end
   
-  def run(initAscLvl, useHandicap = false)
-    # initAscLvl = Initial Ascention Level = Starting stage of the ascention
+  def run(initStepLvl, useHandicap = false)
+    # initStepLvl = Initial Ascention Level = Starting stage of the ascention
     #              level (i.e. game stage).
     
-    # check bounds of initAscLvl - min level is 1
-    initAscLvl = coerce(initAscLvl, 1, @rngAscendLimit)
+    # check bounds of initStepLvl - min level is 1
+    initStepLvl = coerce(initStepLvl, 1, @rngStepLimit)
     
     # The exponent is dependend on the initial ascension / step level
     # and some scalar factor
-    ascensionLevel = rng_ascension(initAscLvl, useHandicap)
+    ascensionLevel = rng_ascension(initStepLvl, useHandicap)
     exponent = ascensionLevel * @rngExponentFactor
       
     # Calc center = base ^ (exp * factor)

@@ -49,8 +49,8 @@ class RNG_Drop_Weapon
     end
     
     # update RNG parameters
-    @rng_weapon_atk.rngAscendLimit = wpnTypeCount
-    @rng_weapon_asc.rngAscendLimit = wpnTypeCount
+    @rng_weapon_atk.rngStepLimit = wpnTypeCount
+    @rng_weapon_asc.rngStepLimit = wpnTypeCount
   end
   
   def m_wpnTypeCount
@@ -59,33 +59,12 @@ class RNG_Drop_Weapon
   
   def wpnTypeCount=(value)
     @wpnTypeCount = value
-    @rng_weapon_atk.rngAscendLimit = @wpnTypeCount
-    @rng_weapon_asc.rngAscendLimit = @wpnTypeCount
-  end
-  
-  def test
-    run_test = 2
-    
-    if run_test == 0
-      puts 'Drop_Weapons debug'
-      
-      puts $data_weapons[2].name
-      puts $data_weapons[2].params[IDX_ATK].to_s
-    elsif run_test == 1
-      t = get_weapon_attack(4)
-      puts "get_weapon_attack[0] = " + t[0].to_s
-      puts "get_weapon_attack[1] = " + t[1].to_s
-      
-    elsif run_test == 2
-      t = get_weapon_version(3)
-      puts "get_weapon_version[0] = " + t[0].to_s
-      puts "get_weapon_version[1] = " + t[1].to_s
-      
-    end
-    
+    @rng_weapon_atk.rngStepLimit = @wpnTypeCount
+    @rng_weapon_asc.rngStepLimit = @wpnTypeCount
   end
   
   def get_weapon_version(startAscension = 0)
+    # Get a version of a groupd of certain weapon types
     ascension = @rng_weapon_asc.rng_ascension(startAscension)
     
     wpnIdx = @wpnDbInitIdx + ascension
@@ -114,7 +93,6 @@ class RNG_Drop_Weapon
   
   def err(errStr)
     puts "ERROR: (RNG_Drop_Weapon) " + errStr
-    
   end
   
 end
