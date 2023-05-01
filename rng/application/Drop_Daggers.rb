@@ -15,19 +15,11 @@
 
 class Drop_Daggers
   def initialize
-    @weapon_generator = RNG_Generate_Weapon.new
+    
     @drp_box_cutters = RNG_Drop_Weapon.new(2, 6)
     
   end
   
-  def add_wpn_to_party(wpn, count = 1)
-    $game_party.gain_item(wpn, count)
-  end
-  
-  def get_weapon(wpnCopy)
-    $data_weapons[@weapon_generator.generate_weapon(wpnCopy)]
-  end
-    
   def drop_box_cutter(startAscension = 0)
     wpnRet = @drp_box_cutters.get_weapon_version(startAscension)
     
@@ -35,7 +27,7 @@ class Drop_Daggers
     
     ascensionLevel = wpnRet[1]
     
-    newWpn = get_weapon(wpnVersion)
+    newWpn = @drp_box_cutters.get_weapon_from_db(wpnVersion)
     
     atkRet = @drp_box_cutters.get_weapon_attack(ascensionLevel, wpnVersion.params[2])
     newWpn.params[2] = atkRet[0]

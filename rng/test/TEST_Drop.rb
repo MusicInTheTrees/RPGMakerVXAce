@@ -52,9 +52,10 @@ class Drop_Daggers
       #                        | + No Noticable lag in the player equipment
       #                        |   menu
       #                        | + Very slight lab in the items->weapon menu
-      
-      for i in 1..100 do
-        add_wpn_to_party(drop_box_cutter)
+      # -----------------------|-----------------------------------------------
+
+      for i in 1..50 do
+        @drp_box_cutters.add_wpn_to_party(drop_box_cutter)
       end
     elsif run_test == 2
       boxCutter = drop_box_cutter

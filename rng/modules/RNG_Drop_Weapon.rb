@@ -89,7 +89,15 @@ class RNG_Drop_Weapon
   
   def get_weapon_grade(ascensionLevel, atk)
     return @rng_weapon_atk.rng_grade(ascensionLevel, atk)
-  end  
+  end
+  
+  def add_wpn_to_party(wpn, count = 1)
+    $game_party.gain_item(wpn, count)
+  end
+  
+  def get_weapon_from_db(wpnCopy)
+    $data_weapons[@weapon_generator.generate_weapon(wpnCopy)]
+  end
   
   def err(errStr)
     puts "ERROR: (RNG_Drop_Weapon) " + errStr
