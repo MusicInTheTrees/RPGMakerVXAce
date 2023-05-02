@@ -27,10 +27,11 @@ class RNG_Drop_Weapon
   #--------------------------------------------------------------------------
   # * Methods
   #--------------------------------------------------------------------------
-  def initialize(wpnDbInitIdx, wpnTypeCount)
+  def initialize(wpnDbInitIdx = 0, wpnTypeCount = 1)
     
     @rng_weapon_atk = RNG_Expo_Step.new
     @rng_weapon_asc = RNG_Expo_Step.new
+    @weapon_generator = RNG_Generate_Weapon.new
     
     # init 'wpnDbInitIdx'
     if wpnDbInitIdx == nil
@@ -97,6 +98,36 @@ class RNG_Drop_Weapon
   
   def get_weapon_from_db(wpnCopy)
     $data_weapons[@weapon_generator.generate_weapon(wpnCopy)]
+  end
+  
+  def set_weapon_db_params(idx, count)
+    @wpnDbInitIdx = idx
+    @wpnTypeCount = count
+    @rng_weapon_atk.rngStepLimit = @wpnTypeCount
+    @rng_weapon_asc.rngStepLimit = @wpnTypeCount
+  end
+  
+  def drop_new_weapon(dbidx, count, startAscension = 0)
+    set_weapon_db_params(dbidx, count)
+    
+    wpnRet = get_weapon_version(startAscension)
+    
+    wpnVersion = wpnRet[0]
+    
+    ascensionLevel = wpnRet[1]
+    
+    newWpn = get_weapon_from_db(wpnVersion)
+    
+    atkRet = get_weapon_attack(ascensionLevel, wpnVersion.params[2])
+    
+    newWpn.params[2] = atkRet[0]
+    
+    lvl = atkRet[1]
+
+    newWpn.name += " " + get_weapon_grade(ascensionLevel, newWpn.params[2])
+    
+    return newWpn
+    
   end
   
   def err(errStr)

@@ -14,28 +14,60 @@
 #==============================================================================
 
 class Drop_Daggers
+  
+  DBIDX_BOX_CUTTER = 2
+  DBIDX_BOX_CUTTER_COUNT = 6
+  
+  DBIDX_SWITCH_BLADE = 8
+  DBIDX_SWITCH_BLADE_COUNT = 6
+  
+  DBIDX_WUSTHOF = 14
+  DBIDX_WUSTHOF_COUNT = 6
+  
+  DBIDX_MECH_PENCIL = 20
+  DBIDX_MECH_PENCIL_COUNT = 6
+  
   def initialize
-    
-    @drp_box_cutters = RNG_Drop_Weapon.new(2, 6)
-    
+    @drp_weapon = RNG_Drop_Weapon.new
   end
   
   def drop_box_cutter(startAscension = 0)
-    wpnRet = @drp_box_cutters.get_weapon_version(startAscension)
+    boxCutter = @drp_weapon.drop_new_weapon(DBIDX_BOX_CUTTER, DBIDX_BOX_CUTTER_COUNT, startAscension)
     
-    wpnVersion = wpnRet[0]
+    # Do other stuff with the boxCutter here
     
-    ascensionLevel = wpnRet[1]
+    @drp_weapon.add_wpn_to_party(boxCutter)
     
-    newWpn = @drp_box_cutters.get_weapon_from_db(wpnVersion)
+    return boxCutter
+  end
+  
+  def drop_switch_blade(startAscension = 0)
+    switchBlade = @drp_weapon.drop_new_weapon(DBIDX_SWITCH_BLADE, DBIDX_SWITCH_BLADE_COUNT, startAscension)
     
-    atkRet = @drp_box_cutters.get_weapon_attack(ascensionLevel, wpnVersion.params[2])
-    newWpn.params[2] = atkRet[0]
-    lvl = atkRet[1]
-
-    newWpn.name += " " + @drp_box_cutters.get_weapon_grade(ascensionLevel, newWpn.params[2])
-
+    # Do other stuff with the switchBlade here
     
-    return newWpn
-  end  
+    @drp_weapon.add_wpn_to_party(switchBlade)
+    
+    return switchBlade
+  end
+  
+  def drop_wusthof(startAscension = 0)
+    wusthof = @drp_weapon.drop_new_weapon(DBIDX_WUSTHOF, DBIDX_WUSTHOF_COUNT, startAscension)
+    
+    # Do other stuff with the wusthof here
+    
+    @drp_weapon.add_wpn_to_party(wusthof)
+    
+    return wusthof
+  end
+  
+  def drop_mech_pencil(startAscension = 0)
+    mechPencil = @drp_weapon.drop_new_weapon(DBIDX_MECH_PENCIL, DBIDX_MECH_PENCIL_COUNT, startAscension)
+    
+    # Do other stuff with the mechPencil here
+    
+    @drp_weapon.add_wpn_to_party(mechPencil)
+    
+    return mechPencil
+  end
 end

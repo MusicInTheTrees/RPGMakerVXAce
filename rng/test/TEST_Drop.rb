@@ -55,7 +55,8 @@ class Drop_Daggers
       # -----------------------|-----------------------------------------------
 
       for i in 1..50 do
-        @drp_box_cutters.add_wpn_to_party(drop_box_cutter)
+        # This method will add it to the player inventory automatically
+        drop_box_cutter
       end
     elsif run_test == 2
       boxCutter = drop_box_cutter
