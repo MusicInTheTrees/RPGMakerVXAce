@@ -107,7 +107,17 @@ class RNG_Drop_Weapon
     @rng_weapon_asc.rngStepLimit = @wpnTypeCount
   end
   
-  def drop_new_weapon(dbidx, count, startAscension = 0)
+  def drop_new_weapon(dbidx, count, startAscension = 0, dropChance = 1)
+    if dropChance <= 0
+      return nil
+    elsif dropChance > 1
+      dropChance = dropChance / 100
+    end
+    
+    if rand(1) > dropChance
+      return nil
+    end
+    
     set_weapon_db_params(dbidx, count)
     
     wpnRet = get_weapon_version(startAscension)
@@ -128,6 +138,20 @@ class RNG_Drop_Weapon
     
     return newWpn
     
+  end
+  
+  def msg_drop_weapon(wpnName, count)
+    msg = "You found "
+    
+    if count < 1
+      return
+    elsif count > 1
+      msg += count.to_s + " " + wpnName + "s!"
+    else
+      msg += "a " + wpnName + "!"
+    end
+    
+    $game_message.add(msg)
   end
   
   def err(errStr)

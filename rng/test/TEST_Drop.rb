@@ -54,7 +54,7 @@ class Drop_Daggers
       #                        | + Very slight lab in the items->weapon menu
       # -----------------------|-----------------------------------------------
 
-      for i in 1..50 do
+      for i in 1..2 do
         # This method will add it to the player inventory automatically
         drop_box_cutter
       end
