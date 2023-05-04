@@ -49,9 +49,9 @@ class RNG_Drop_Weapon
       @wpnTypeCount = wpnTypeCount
     end
     
-    # update RNG parameters
-    @rng_weapon_atk.rngStepLimit = wpnTypeCount
-    @rng_weapon_asc.rngStepLimit = wpnTypeCount
+    # update RNG parameters - up to, but not including count
+    @rng_weapon_atk.rngStepLimit = wpnTypeCount-1
+    @rng_weapon_asc.rngStepLimit = wpnTypeCount-1
   end
   
   def m_wpnTypeCount
@@ -60,8 +60,9 @@ class RNG_Drop_Weapon
   
   def wpnTypeCount=(value)
     @wpnTypeCount = value
-    @rng_weapon_atk.rngStepLimit = @wpnTypeCount
-    @rng_weapon_asc.rngStepLimit = @wpnTypeCount
+    # update RNG parameters - up to, but not including count
+    @rng_weapon_atk.rngStepLimit = @wpnTypeCount-1
+    @rng_weapon_asc.rngStepLimit = @wpnTypeCount-1
   end
   
   def get_weapon_version(startAscension = 0)
@@ -103,8 +104,9 @@ class RNG_Drop_Weapon
   def set_weapon_db_params(idx, count)
     @wpnDbInitIdx = idx
     @wpnTypeCount = count
-    @rng_weapon_atk.rngStepLimit = @wpnTypeCount
-    @rng_weapon_asc.rngStepLimit = @wpnTypeCount
+    # update RNG parameters - up to, but not including count
+    @rng_weapon_atk.rngStepLimit = @wpnTypeCount-1
+    @rng_weapon_asc.rngStepLimit = @wpnTypeCount-1
   end
   
   def drop_new_weapon(dbidx, count, startAscension = 0, dropChance = 1)

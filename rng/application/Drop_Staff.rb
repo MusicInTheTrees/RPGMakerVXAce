@@ -11,11 +11,12 @@
 #  This class returns a version of staff from the database
 #  These parameters are very specific to how the user places the weapons
 #  in the database.
+#
+# -- Global Reference --
+#  $drop_staffs
 #==============================================================================
 
-class Drop_Daggers
-  
-  NUMBER_OF_STAFF = 4
+class Drop_Staffs
   
   DBIDX_STOP_SIGN = 58
   DBIDX_STOP_SIGN_COUNT = 6
@@ -47,7 +48,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(stopSign)
     
-    @drp_weapon.msg_drop_weapon(stopSign.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(stopSign.name, 1)
     
     return stopSign
   end
@@ -66,7 +67,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(rainStick)
     
-    @drp_weapon.msg_drop_weapon(rainStick.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(rainStick.name, 1)
     
     return rainStick
   end
@@ -85,7 +86,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(psychBook)
     
-    @drp_weapon.msg_drop_weapon(psychBook.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(psychBook.name, 1)
     
     return psychBook
   end
@@ -104,13 +105,17 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(ti)
     
-    @drp_weapon.msg_drop_weapon(ti.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(ti.name, 1)
     
     return ti
   end
   
-  def drop_random_staff(startAscension = 0, dropChance = 1)
-    staffChoice = rand(NUMBER_OF_STAFF).round
+  def drop_random_staff(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
+    if maxWeaponVersion < 1
+      maxWeaponVersion = 3
+    end
+    
+    staffChoice = rand(maxWeaponVersion).round
     
     case staffChoice
     when 0
@@ -125,4 +130,23 @@ class Drop_Daggers
       puts "Bad staff choice"
     end
   end
+  
+  def chest_random_staff
+    d.drop_random_staff($my_vars.min_ascension_level, 
+                        $my_vars.max_weapon_version)
+  end
+
+  def battle_random_staff
+    d.drop_random_staff($my_vars.min_ascension_level, 
+                        $my_vars.max_weapon_version, 
+                        $my_vars.battle_drop_chance)
+  end
+  
+  def boss_random_staff
+    d.drop_random_staff($my_vars.min_ascension_level, 
+                        $my_vars.max_weapon_version, 
+                        $my_vars.boss_drop_chance)
+  end
 end
+
+$drop_staffs = Drop_Staffs.new

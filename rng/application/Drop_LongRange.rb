@@ -11,22 +11,23 @@
 #  This class returns a version of Long Range from the database
 #  These parameters are very specific to how the user places the weapons
 #  in the database.
+#
+# -- Global Reference --
+#  $drop_long_range
 #==============================================================================
 
-class Drop_Daggers
+class Drop_LongRange
   
-  NUMBER_OF_LONG_RANGE = 4
-  
-  DBIDX_SUPER_SOAKER = 85
+  DBIDX_SUPER_SOAKER = 86
   DBIDX_SUPER_SOAKER_COUNT = 6
   
-  DBIDX_POTATO_GUN = 91
-  DBIDX_POTATO_GUN_COUNT = 6
+  DBIDX_GUN = 92
+  DBIDX_GUN_COUNT = 6
   
-  DBIDX_SPRAY_PAINT = 97
+  DBIDX_SPRAY_PAINT = 98
   DBIDX_SPRAY_PAINT_COUNT = 6
   
-  DBIDX_MEGA_PHONE = 103
+  DBIDX_MEGA_PHONE = 104
   DBIDX_MEGA_PHONE_COUNT = 6
   
   def initialize
@@ -47,26 +48,26 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(superSoaker)
     
-    @drp_weapon.msg_drop_weapon(superSoaker.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(superSoaker.name, 1)
     
     return superSoaker
   end
   
-  def drop_potato_gun(startAscension = 0, dropChance = 1)
-    potatoGun = @drp_weapon.drop_new_weapon(DBIDX_POTATO_GUN, 
-                                            DBIDX_POTATO_GUN_COUNT, 
-                                            startAscension,
-                                            dropChance)
-    
-    if potatoGun == nil
+  def drop_gun(startAscension = 0, dropChance = 1)
+    gun = @drp_weapon.drop_new_weapon(DBIDX_GUN, 
+                                      DBIDX_GUN_COUNT, 
+                                      startAscension,
+                                      dropChance)
+  
+    if gun == nil
       return nil
     end
     
-    # Do other stuff with the potatoGun here
+    # Do other stuff with the gun here
     
-    @drp_weapon.add_wpn_to_party(potatoGun)
+    @drp_weapon.add_wpn_to_party(gun)
     
-    @drp_weapon.msg_drop_weapon(potatoGun.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(gun.name, 1)
     
     return potatoGun
   end
@@ -85,7 +86,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(sprayPaint)
     
-    @drp_weapon.msg_drop_weapon(sprayPaint.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(sprayPaint.name, 1)
     
     return sprayPaint
   end
@@ -104,19 +105,23 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(megaPhone)
     
-    @drp_weapon.msg_drop_weapon(megaPhone.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(megaPhone.name, 1)
     
     return megaPhone
   end
   
-  def drop_random_long_range(startAscension = 0, dropChance = 1)
-    longRangeChoice = rand(NUMBER_OF_LONG_RANGE).round
+  def drop_random_long_range(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
+    if maxWeaponVersion < 1
+      maxWeaponVersion = 3
+    end
+    
+    longRangeChoice = rand(maxWeaponVersion).round
     
     case longRangeChoice
     when 0
       drop_super_soaker(startAscension, dropChance)
     when 1
-      drop_potato_gun(startAscension, dropChance)
+      drop_gun(startAscension, dropChance)
     when 2
       drop_spray_paint(startAscension, dropChance)
     when 3
@@ -126,4 +131,22 @@ class Drop_Daggers
     end
   end
   
+  def chest_random_long_range
+    d.drop_random_long_range($my_vars.min_ascension_level, 
+                             $my_vars.max_weapon_version)
+  end
+
+  def battle_random_long_range
+    d.drop_random_long_range($my_vars.min_ascension_level, 
+                             $my_vars.max_weapon_version, 
+                             $my_vars.battle_drop_chance)
+  end
+  
+  def boss_random_long_range
+    d.drop_random_long_range($my_vars.min_ascension_level, 
+                             $my_vars.max_weapon_version, 
+                             $my_vars.boss_drop_chance)
+  end
 end
+
+$drop_long_range = Drop_LongRange.new

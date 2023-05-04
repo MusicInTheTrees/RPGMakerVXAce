@@ -11,11 +11,12 @@
 #  This class returns a version of hammer from the database
 #  These parameters are very specific to how the user places the weapons
 #  in the database.
+#
+# -- Global Reference --
+#  $drop_hammers
 #==============================================================================
 
 class Drop_Daggers
-  
-  NUMBER_OF_HAMMERS = 4
   
   DBIDX_EASLE = 30
   DBIDX_EASLE_COUNT = 6
@@ -26,8 +27,8 @@ class Drop_Daggers
   DBIDX_DESK_CHAIR = 42
   DBIDX_DESK_CHAIR_COUNT = 6
   
-  DBIDX_FRIENDS_GUITAR = 48
-  DBIDX_FRIENDS_GUITAR_COUNT = 6
+  DBIDX_GUITAR = 48
+  DBIDX_GUITAR_COUNT = 6
   
   def initialize
     @drp_weapon = RNG_Drop_Weapon.new
@@ -47,7 +48,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(easle)
     
-    @drp_weapon.msg_drop_weapon(easle.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(easle.name, 1)
     
     return ealse
   end
@@ -66,7 +67,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(golfClub)
     
-    @drp_weapon.msg_drop_weapon(golfClub.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(golfClub.name, 1)
     
     return golfClub
   end
@@ -85,32 +86,36 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(deskChair)
     
-    @drp_weapon.msg_drop_weapon(deskChair.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(deskChair.name, 1)
     
     return deskChair
   end
   
-  def drop_friends_guitar(startAscension = 0, dropChance = 1)
-    friendsGuitar = @drp_weapon.drop_new_weapon(DBIDX_FRIENDS_GUITAR, 
-                                                DBIDX_FRIENDS_GUITAR_COUNT, 
-                                                startAscension,
-                                                dropChance)
+  def drop_guitar(startAscension = 0, dropChance = 1)
+    guitar = @drp_weapon.drop_new_weapon(DBIDX_GUITAR, 
+                                         DBIDX_GUITAR_COUNT, 
+                                         startAscension,
+                                         dropChance)
     
-    if friendsGuitar == nil
+    if guitar == nil
       return nil
     end
     
     # Do other stuff with the friendsGuitar here
     
-    @drp_weapon.add_wpn_to_party(friendsGuitar)
+    @drp_weapon.add_wpn_to_party(guitar)
     
-    @drp_weapon.msg_drop_weapon(friendsGuitar.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(guitar.name, 1)
     
-    return friendsGuitar
+    return guitar
   end
   
-  def drop_random_hammer(startAscension = 0, dropChance = 1)
-    hammerChoice = rand(NUMBER_OF_HAMMERS).round
+  def drop_random_hammer(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
+    if maxWeaponVersion < 1
+      maxWeaponVersion = 3
+    end
+    
+    hammerChoice = rand(maxWeaponVersion).round
     
     case hammerChoice
     when 0
@@ -120,10 +125,28 @@ class Drop_Daggers
     when 2
       drop_desk_chair(startAscension, dropChance)
     when 3
-      drop_friends_guitar(startAscension, dropChance)
+      drop_guitar(startAscension, dropChance)
     else
       puts "Bad hammer choice"
     end
   end
   
+  def chest_random_hammer
+    d.drop_random_hammer($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version)
+  end
+
+  def battle_random_hammer
+    d.drop_random_hammer($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version, 
+                         $my_vars.battle_drop_chance)
+  end
+  
+  def boss_random_hammer
+    d.drop_random_hammer($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version, 
+                         $my_vars.boss_drop_chance)
+  end
 end
+
+$drop_hammers = Drop_Hammers.new

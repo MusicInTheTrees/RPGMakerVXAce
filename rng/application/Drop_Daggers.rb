@@ -11,11 +11,12 @@
 #  This class returns a version of dagger from the database
 #  These parameters are very specific to how the user places the weapons
 #  in the database.
+#
+# -- Global Reference --
+#  $drop_daggers
 #==============================================================================
 
 class Drop_Daggers
-  
-  NUMBER_OF_DAGGERS = 4
   
   DBIDX_BOX_CUTTER = 2
   DBIDX_BOX_CUTTER_COUNT = 6
@@ -47,7 +48,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(boxCutter)
     
-    @drp_weapon.msg_drop_weapon(boxCutter.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(boxCutter.name, 1)
     
     return boxCutter
   end
@@ -66,7 +67,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(switchBlade)
     
-    @drp_weapon.msg_drop_weapon(switchBlade.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(switchBlade.name, 1)
     
     return switchBlade
   end
@@ -85,7 +86,7 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(wusthof)
     
-    @drp_weapon.msg_drop_weapon(wusthof.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(wusthof.name, 1)
     
     return wusthof
   end
@@ -104,13 +105,18 @@ class Drop_Daggers
     
     @drp_weapon.add_wpn_to_party(mechPencil)
     
-    @drp_weapon.msg_drop_weapon(mechPencil.name, 1)
+    RNG_Drop_Weapon.msg_drop_weapon(mechPencil.name, 1)
     
     return mechPencil
   end
   
-  def drop_random_dagger(startAscension = 0, dropChance = 1)
-    daggerChoice = rand(NUMBER_OF_DAGGERS).round
+  def drop_random_dagger(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
+    
+    if maxWeaponVersion < 1
+      maxWeaponVersion = 3
+    end
+    
+    daggerChoice = rand(maxWeaponVersion).round
     
     case daggerChoice
     when 0
@@ -125,4 +131,23 @@ class Drop_Daggers
       puts "Bad dagger choice"
     end
   end
+  
+  def chest_random_dagger
+    d.drop_random_dagger($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version)
+  end
+
+  def battle_random_dagger
+    d.drop_random_dagger($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version, 
+                         $my_vars.battle_drop_chance)
+  end
+  
+  def boss_random_dagger
+    d.drop_random_dagger($my_vars.min_ascension_level, 
+                         $my_vars.max_weapon_version, 
+                         $my_vars.boss_drop_chance)
+  end
 end
+
+$drop_daggers = Drop_Daggers.new
