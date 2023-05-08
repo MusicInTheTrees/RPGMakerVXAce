@@ -29,8 +29,8 @@ class RNG_Drop_Weapon
   #--------------------------------------------------------------------------
   def initialize(wpnDbInitIdx = 0, wpnTypeCount = 1)
     
-    @rng_weapon_atk = RNG_Expo_Step.new
-    @rng_weapon_asc = RNG_Expo_Step.new
+    @rng_weapon_atk   = RNG_Expo_Step.new
+    @rng_weapon_asc   = RNG_Expo_Step.new
     @weapon_generator = RNG_Generate_Weapon.new
     
     # init 'wpnDbInitIdx'
@@ -142,7 +142,7 @@ class RNG_Drop_Weapon
     
   end
   
-  def msg_drop_weapon(wpnName, count)
+  def self.msg_drop_weapon(wpnName, count)
     msg = "You found "
     
     if count < 1
