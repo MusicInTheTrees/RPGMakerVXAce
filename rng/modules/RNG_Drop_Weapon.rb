@@ -13,116 +13,31 @@
 #  in the database.
 #==============================================================================
 
-class RNG_Drop_Weapon
-  #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-  attr_accessor :wpnDbInitIdx
-  
+class RNG_Drop_Weapon < RNG_Drop_Equip
   #--------------------------------------------------------------------------
   # * Constants
   #--------------------------------------------------------------------------
-  IDX_ATK = 2
+  PARAM_IDX_ATK = 2
   
   #--------------------------------------------------------------------------
   # * Methods
   #--------------------------------------------------------------------------
   def initialize(wpnDbInitIdx = 0, wpnTypeCount = 1)
-    
-    @rng_weapon_atk   = RNG_Expo_Step.new
-    @rng_weapon_asc   = RNG_Expo_Step.new
-    @weapon_generator = RNG_Generate_Weapon.new
-    
-    # init 'wpnDbInitIdx'
-    if wpnDbInitIdx == nil
-      @wpnDbInitIdx = 0
-      err("wpnDbInitIdx parameter was nil")
-    else
-      @wpnDbInitIdx = wpnDbInitIdx
-    end
-    
-    # init 'wpnTypeCount'
-    if wpnTypeCount == nil || wpnTypeCount < 0
-      @wpnTypeCount = 0
-      err("wpnTypeCount parameter was nil OR 0")
-    else
-      @wpnTypeCount = wpnTypeCount
-    end
-    
-    # update RNG parameters - up to, but not including count
-    @rng_weapon_atk.rngStepLimit = wpnTypeCount-1
-    @rng_weapon_asc.rngStepLimit = wpnTypeCount-1
-  end
-  
-  def m_wpnTypeCount
-    @m_wpnTypeCount
-  end
-  
-  def wpnTypeCount=(value)
-    @wpnTypeCount = value
-    # update RNG parameters - up to, but not including count
-    @rng_weapon_atk.rngStepLimit = @wpnTypeCount-1
-    @rng_weapon_asc.rngStepLimit = @wpnTypeCount-1
-  end
-  
-  def get_weapon_version(startAscension = 0)
-    # Get a version of a groupd of certain weapon types
-    ascension = @rng_weapon_asc.rng_ascension(startAscension)
-    
-    wpnIdx = @wpnDbInitIdx + ascension
-    
-    weapon = $data_weapons[wpnIdx]
-    
-    if weapon == nil
-      err("Weapon does not exist at index: " + wpnIdx.to_s)
-      return false
-    end
-    
-    return weapon, ascension
-  end
-  
-  def get_weapon_attack(startAscension = 0, scalar = -1)
-    if scalar >= 0
-      @rng_weapon_atk.rngScalar = scalar
-    end
-    atk = @rng_weapon_atk.run(startAscension)
-    return atk[0], atk[1]
-  end
-  
-  def get_weapon_grade(ascensionLevel, atk)
-    return @rng_weapon_atk.rng_grade(ascensionLevel, atk)
-  end
-  
-  def add_wpn_to_party(wpn, count = 1)
-    $game_party.gain_item(wpn, count)
+    super(wpnDbInitIdx, wpnTypeCount)
   end
   
   def get_weapon_from_db(wpnCopy)
-    $data_weapons[@weapon_generator.generate_weapon(wpnCopy)]
-  end
-  
-  def set_weapon_db_params(idx, count)
-    @wpnDbInitIdx = idx
-    @wpnTypeCount = count
-    # update RNG parameters - up to, but not including count
-    @rng_weapon_atk.rngStepLimit = @wpnTypeCount-1
-    @rng_weapon_asc.rngStepLimit = @wpnTypeCount-1
+    $data_weapons[RNG_Generate_Weapon.generate(wpnCopy)]
   end
   
   def drop_new_weapon(dbidx, count, startAscension = 0, dropChance = 1)
-    if dropChance <= 0
-      return nil
-    elsif dropChance > 1
-      dropChance = dropChance / 100
-    end
-    
-    if rand(1) > dropChance
+    if false == drop_success(dropChance)
       return nil
     end
     
-    set_weapon_db_params(dbidx, count)
+    set_equip_db_params(dbidx, count)
     
-    wpnRet = get_weapon_version(startAscension)
+    wpnRet = get_article_version($data_weapons, startAscension)
     
     wpnVersion = wpnRet[0]
     
@@ -130,34 +45,18 @@ class RNG_Drop_Weapon
     
     newWpn = get_weapon_from_db(wpnVersion)
     
-    atkRet = get_weapon_attack(ascensionLevel, wpnVersion.params[2])
+    atkRet = get_equip_value(ascensionLevel, wpnVersion.params[PARAM_IDX_ATK])
     
-    newWpn.params[2] = atkRet[0]
+    newWpn.params[PARAM_IDX_ATK] = atkRet[0]
     
     lvl = atkRet[1]
-
-    newWpn.name += " " + get_weapon_grade(ascensionLevel, newWpn.params[2])
+    
+    newWpn.name = get_equip_name(newWpn, 
+                                 ascensionLevel, 
+                                 newWpn.params[PARAM_IDX_ATK])
     
     return newWpn
     
-  end
-  
-  def self.msg_drop_weapon(wpnName, count)
-    msg = "You found "
-    
-    if count < 1
-      return
-    elsif count > 1
-      msg += count.to_s + " " + wpnName + "s!"
-    else
-      msg += "a " + wpnName + "!"
-    end
-    
-    $game_message.add(msg)
-  end
-  
-  def err(errStr)
-    puts "ERROR: (RNG_Drop_Weapon) " + errStr
   end
   
 end

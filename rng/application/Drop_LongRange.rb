@@ -13,7 +13,7 @@
 #  in the database.
 #
 # -- Global Reference --
-#  $drop_long_range
+#  $drop_long_range (in file MY_Variables)
 #==============================================================================
 
 class Drop_LongRange
@@ -46,9 +46,7 @@ class Drop_LongRange
     
     # Do other stuff with the superSoaker here
     
-    @drp_weapon.add_wpn_to_party(superSoaker)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(superSoaker.name, 1)
+    RNG_Drop_Article.add_article_to_party(superSoaker, 1, true)
     
     return superSoaker
   end
@@ -65,9 +63,7 @@ class Drop_LongRange
     
     # Do other stuff with the gun here
     
-    @drp_weapon.add_wpn_to_party(gun)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(gun.name, 1)
+    RNG_Drop_Article.add_article_to_party(potatoGun, 1, true)
     
     return potatoGun
   end
@@ -84,9 +80,7 @@ class Drop_LongRange
     
     # Do other stuff with the sprayPaint here
     
-    @drp_weapon.add_wpn_to_party(sprayPaint)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(sprayPaint.name, 1)
+    RNG_Drop_Article.add_article_to_party(stopSign, 1, true)
     
     return sprayPaint
   end
@@ -103,9 +97,7 @@ class Drop_LongRange
     
     # Do other stuff with the megaPhone here
     
-    @drp_weapon.add_wpn_to_party(megaPhone)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(megaPhone.name, 1)
+    RNG_Drop_Article.add_article_to_party(megaPhone, 1, true)
     
     return megaPhone
   end
@@ -148,5 +140,3 @@ class Drop_LongRange
                              $my_vars.boss_drop_chance)
   end
 end
-
-$drop_long_range = Drop_LongRange.new

@@ -13,7 +13,7 @@
 #  in the database.
 #
 # -- Global Reference --
-#  $drop_daggers
+#  $drop_daggers (in file MY_Variables)
 #==============================================================================
 
 class Drop_Daggers
@@ -24,8 +24,8 @@ class Drop_Daggers
   DBIDX_SWITCH_BLADE = 8
   DBIDX_SWITCH_BLADE_COUNT = 6
   
-  DBIDX_WUSTHOF = 14
-  DBIDX_WUSTHOF_COUNT = 6
+  DBIDX_KITCHEN_KNIFE = 14
+  DBIDX_KITCHEN_KNIFE_COUNT = 6
   
   DBIDX_MECH_PENCIL = 20
   DBIDX_MECH_PENCIL_COUNT = 6
@@ -46,9 +46,7 @@ class Drop_Daggers
     
     # Do other stuff with the boxCutter here
     
-    @drp_weapon.add_wpn_to_party(boxCutter)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(boxCutter.name, 1)
+    RNG_Drop_Article.add_article_to_party(boxCutter, 1, true)
     
     return boxCutter
   end
@@ -65,30 +63,26 @@ class Drop_Daggers
     
     # Do other stuff with the switchBlade here
     
-    @drp_weapon.add_wpn_to_party(switchBlade)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(switchBlade.name, 1)
+    RNG_Drop_Article.add_article_to_party(switchBlade, 1, true)
     
     return switchBlade
   end
   
-  def drop_wusthof(startAscension = 0, dropChance = 1)
-    wusthof = @drp_weapon.drop_new_weapon(DBIDX_WUSTHOF, 
-                                          DBIDX_WUSTHOF_COUNT, 
+  def drop_kitchen_knife(startAscension = 0, dropChance = 1)
+    wusthof = @drp_weapon.drop_new_weapon(DBIDX_KITCHEN_KNIFE, 
+                                          DBIDX_KITCHEN_KNIFE_COUNT, 
                                           startAscension,
                                           dropChance)
     
-    if wusthof == nil
+    if kitchenKnife == nil
       return
     end
     
-    # Do other stuff with the wusthof here
+    # Do other stuff with the kitchenKnife here
     
-    @drp_weapon.add_wpn_to_party(wusthof)
+    RNG_Drop_Article.add_article_to_party(kitchenKnife, 1, true)
     
-    RNG_Drop_Weapon.msg_drop_weapon(wusthof.name, 1)
-    
-    return wusthof
+    return kitchenKnife
   end
   
   def drop_mech_pencil(startAscension = 0, dropChance = 1)
@@ -103,9 +97,7 @@ class Drop_Daggers
     
     # Do other stuff with the mechPencil here
     
-    @drp_weapon.add_wpn_to_party(mechPencil)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(mechPencil.name, 1)
+    RNG_Drop_Article.add_article_to_party(mechPencil, 1, true)
     
     return mechPencil
   end
@@ -124,7 +116,7 @@ class Drop_Daggers
     when 1
       drop_switch_blade(startAscension, dropChance)
     when 2
-      drop_wusthof(startAscension, dropChance)
+      drop_kitchen_knife(startAscension, dropChance)
     when 3
       drop_mech_pencil(startAscension, dropChance)
     else
@@ -149,5 +141,3 @@ class Drop_Daggers
                          $my_vars.boss_drop_chance)
   end
 end
-
-$drop_daggers = Drop_Daggers.new

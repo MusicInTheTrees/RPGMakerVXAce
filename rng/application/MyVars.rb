@@ -9,13 +9,29 @@ $G_IDX_MAX_WEAPON_VERSION = 42
 $G_IDX_BATTLE_WEAPON_DROP_CHANCE = 43
 $G_IDX_BOSS_WEAPON_DROP_CHANCE = 44  
 
-
 class MyVars
+  def initialize
+    @newGameInit = false
+  end
+  
   def newGame
-    $game_variables[$G_IDX_MIN_ASCENSION_LEVEL] = 0
-    $game_variables[$G_IDX_MAX_WEAPON_VERSION] = 0
-    $game_variables[$G_IDX_BATTLE_WEAPON_DROP_CHANCE] = 0.6
-    $game_variables[$G_IDX_BOSS_WEAPON_DROP_CHANCE] = 0.4
+    if !@newGameInit
+      set_min_ascension_level(0)
+      
+      # If max_weapon_version is 0, it will 
+      set_max_weapon_version(0)
+      
+      set_battle_drop_chance(0.6)
+      
+      set_boss_drop_chance(0.4)
+      
+      $drop_daggers    = Drop_Daggers.new
+      $drop_hammers    = Drop_Hammers.new
+      $drop_staffs     = Drop_Staffs.new
+      $drop_long_range = Drop_LongRange.new
+    end
+    
+    @newGameInit = true
   end
   
   # ===================================
@@ -25,7 +41,7 @@ class MyVars
     return $game_variables[$G_IDX_MIN_ASCENSION_LEVEL]
   end
   
-  def min_ascension_level=(val)
+  def set_min_ascension_level(val)
     $game_variables[$G_IDX_MIN_ASCENSION_LEVEL] = val
   end
   
@@ -44,7 +60,7 @@ class MyVars
     return $game_variables[$G_IDX_MAX_WEAPON_VERSION]
   end
   
-  def max_weapon_version=(val)
+  def set_max_weapon_version(val)
     $game_variables[$G_IDX_MAX_WEAPON_VERSION] = val
   end
   
@@ -63,7 +79,7 @@ class MyVars
     return $game_variables[$G_IDX_BATTLE_WEAPON_DROP_CHANCE]
   end
   
-  def battle_drop_chance=(val)
+  def set_battle_drop_chance(val)
     $game_variables[$G_IDX_BATTLE_WEAPON_DROP_CHANCE] = val
   end  
   
@@ -74,7 +90,7 @@ class MyVars
     return $game_variables[$G_IDX_BOSS_WEAPON_DROP_CHANCE]
   end
   
-  def boss_drop_chance=(val)
+  def set_boss_drop_chance(val)
     $game_variables[$G_IDX_BOSS_WEAPON_DROP_CHANCE] = val
   end  
   

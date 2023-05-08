@@ -13,7 +13,7 @@
 #  in the database.
 #
 # -- Global Reference --
-#  $drop_staffs
+#  $drop_staffs (in file MY_Variables)
 #==============================================================================
 
 class Drop_Staffs
@@ -46,9 +46,7 @@ class Drop_Staffs
     
     # Do other stuff with the stopSign here
     
-    @drp_weapon.add_wpn_to_party(stopSign)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(stopSign.name, 1)
+    RNG_Drop_Article.add_article_to_party(stopSign, 1, true)
     
     return stopSign
   end
@@ -65,9 +63,7 @@ class Drop_Staffs
     
     # Do other stuff with the rainStick here
     
-    @drp_weapon.add_wpn_to_party(rainStick)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(rainStick.name, 1)
+    RNG_Drop_Article.add_article_to_party(rainStick, 1, true)
     
     return rainStick
   end
@@ -84,9 +80,7 @@ class Drop_Staffs
     
     # Do other stuff with the psychBook here
     
-    @drp_weapon.add_wpn_to_party(psychBook)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(psychBook.name, 1)
+    RNG_Drop_Article.add_article_to_party(psychBook, 1, true)
     
     return psychBook
   end
@@ -103,9 +97,7 @@ class Drop_Staffs
     
     # Do other stuff with the ti here
     
-    @drp_weapon.add_wpn_to_party(ti)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(ti.name, 1)
+    RNG_Drop_Article.add_article_to_party(ti, 1, true)
     
     return ti
   end
@@ -148,5 +140,3 @@ class Drop_Staffs
                         $my_vars.boss_drop_chance)
   end
 end
-
-$drop_staffs = Drop_Staffs.new

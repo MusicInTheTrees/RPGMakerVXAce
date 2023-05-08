@@ -13,10 +13,10 @@
 #  in the database.
 #
 # -- Global Reference --
-#  $drop_hammers
+#  $drop_hammers (in file MY_Variables)
 #==============================================================================
 
-class Drop_Daggers
+class Drop_Hammers
   
   DBIDX_EASLE = 30
   DBIDX_EASLE_COUNT = 6
@@ -46,9 +46,7 @@ class Drop_Daggers
     
     # Do other stuff with the easle here
     
-    @drp_weapon.add_wpn_to_party(easle)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(easle.name, 1)
+    RNG_Drop_Article.add_article_to_party(easle, 1, true)
     
     return ealse
   end
@@ -65,9 +63,7 @@ class Drop_Daggers
     
     # Do other stuff with the golfClub here
     
-    @drp_weapon.add_wpn_to_party(golfClub)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(golfClub.name, 1)
+    RNG_Drop_Article.add_article_to_party(golfClub, 1, true)
     
     return golfClub
   end
@@ -84,9 +80,7 @@ class Drop_Daggers
     
     # Do other stuff with the deskChair here
     
-    @drp_weapon.add_wpn_to_party(deskChair)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(deskChair.name, 1)
+    RNG_Drop_Article.add_article_to_party(deskChair, 1, true)
     
     return deskChair
   end
@@ -103,9 +97,7 @@ class Drop_Daggers
     
     # Do other stuff with the friendsGuitar here
     
-    @drp_weapon.add_wpn_to_party(guitar)
-    
-    RNG_Drop_Weapon.msg_drop_weapon(guitar.name, 1)
+    RNG_Drop_Article.add_article_to_party(guitar, 1, true)
     
     return guitar
   end
@@ -148,5 +140,3 @@ class Drop_Daggers
                          $my_vars.boss_drop_chance)
   end
 end
-
-$drop_hammers = Drop_Hammers.new
