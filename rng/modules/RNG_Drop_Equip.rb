@@ -7,7 +7,7 @@ class RNG_Drop_Equip < RNG_Drop_Article
     @rng_equip_val = RNG_Expo_Step.new
     
     # update RNG parameters - up to, but not including count
-    @rng_equip_val.rngStepLimit = eqpTypeCount-1
+    @rng_equip_val.rngStepLimit = eqpTypeCount - 1
   end
   
   def set_eqpTypeCount(value)
@@ -16,8 +16,13 @@ class RNG_Drop_Equip < RNG_Drop_Article
   end
   
   def set_equip_db_params(idx, count)
+    
     set_article_db_params(idx, count)
-    @rng_equip_val.rngStepLimit = @eqpTypeCount-1
+    
+    #
+    # PROBLEM HERE
+    #
+    @rng_equip_val.rngStepLimit = count - 1
   end
   
   def get_equip_value(startAscension = 0, scalar = -1)

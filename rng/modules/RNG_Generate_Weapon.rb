@@ -14,16 +14,8 @@
 
 
 class RNG_Generate_Weapon
-  def initialize
-    @GENERATE_START_INDEX = $data_weapons.length
-  end
   
-  def get_generated_weapons
-    delta = $data_weapons.length - @GENERATE_START_INDEX
-    $data_weapons[@GENERATE_START_INDEX, delta]
-  end
-  
-  def copy_wpn_data(to, from)
+  def self.copy_wpn_data(to, from)
     # copy everything but the id
     to.name = from.name
     to.wtype_id = from.wtype_id
@@ -37,7 +29,7 @@ class RNG_Generate_Weapon
     to.note = from.note
   end
   
-  def generate_weapon(copyWpn = nil)
+  def self.generate(copyWpn = nil)
     wpn = RPG::Weapon.new
     
     $data_weapons.push(wpn)
@@ -47,13 +39,13 @@ class RNG_Generate_Weapon
     wpn.id = id
     
     if (copyWpn != nil)
-      copy_wpn_data(wpn, copyWpn)
+      RNG_Generate_Weapon.copy_wpn_data(wpn, copyWpn)
     end
     
     return id    
   end
   
-  def add_wpn_to_party(wpn)
+  def self.add_wpn_to_party(wpn)
     $game_party.gain_item(wpn, 1)
   end
 end

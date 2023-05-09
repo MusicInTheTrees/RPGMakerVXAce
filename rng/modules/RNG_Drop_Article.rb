@@ -94,18 +94,20 @@ class RNG_Drop_Article
     $game_party.gain_item(art, count)
     
     if true == msg
-      self.class.msg_drop_article(art.name, count)
+      RNG_Drop_Article.msg_drop_article(art.name, count)
     end
   end
   
-  def drop_success(dropChance)
+  def self.drop_success(dropChance)
     return false unless dropChance > 0
+    return true unless dropChance != 1
     
     if dropChance > 1
-      dropChance = dropChance / 100.0
+      dropChance = dropChance.to_f / 100.0
     end
     
-    return false unless rand(1) > dropChance
+    # If guess [rand(1.0)] is within 'dropChance' -> Drop!
+    return false unless rand(1.0) <= dropChance
     return true
   end
   

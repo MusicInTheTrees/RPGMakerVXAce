@@ -31,7 +31,7 @@ class RNG_Drop_Weapon < RNG_Drop_Equip
   end
   
   def drop_new_weapon(dbidx, count, startAscension = 0, dropChance = 1)
-    if false == drop_success(dropChance)
+    if false == RNG_Drop_Article.drop_success(dropChance)
       return nil
     end
     
