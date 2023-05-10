@@ -128,10 +128,9 @@ class RNG_Expo_Step
   end
   
   def rng_grade(ascensionLevel, rngVal)
-    curve = pure_curve(ascensionLevel)
-    center = curve# - @rngScalar
+    center = pure_curve(ascensionLevel)
     
-    max_val = @rngScalar + right_of_center(center)
+    max_val = right_of_center(center)
     
     # S = >0.98
     # A = >0.9
@@ -232,75 +231,21 @@ class RNG_Expo_Step
     # check bounds of initStepLvl - min level is 1
     initStepLvl = coerce(initStepLvl, 1, @rngStepLimit)
     
-    # The exponent is dependend on the initial ascension / step level
-    # and some scalar factor
+    # Get RNG ascensionLevel
     ascensionLevel = rng_ascension(initStepLvl, useHandicap)
-    exponent = ascensionLevel * @rngExponentFactor
-      
-    # Calc center = base ^ (exp * factor)
-    center = @rngBase ** exponent
+    
+    center = pure_curve(ascensionLevel)
     
     # Lower bound of RNG
-    left = (@rngBoundFactor * center).round
+    left = left_of_center(center)
     
     # Upper bound of RNG
-    right = (center * (2 - @rngBoundFactor)).round
+    right = right_of_center(center)
     
     # Output RNG value
     rng = ((left + rand(right - left))).round
     
-    # Final value
-    rng = @rngScalar + rng
-    
     return rng, ascensionLevel
     
   end
-  
-  #--------------------------------------------------------------------------
-  # * Macros /  Wrappers
-  #--------------------------------------------------------------------------
-  def run_1
-    run(1)
-  end
-  
-  def run_1_handicap
-    run(1, true)
-  end
-  
-  def run_2
-    run(2)
-  end
-  
-  def run_2_handicap
-    run(2, true)
-  end
-  
-  def run_3
-    run(3)
-  end
-  
-  def run_3_handicap
-    run(3, true)
-  end
-  
-  def run_4
-    run(4)
-  end
-  
-  def run_4_handicap
-    run(4, true)
-  end
-  
-  def run_5
-    run(5)
-  end
-  
-  def run_5_handicap
-    run(5, true)
-  end
 end
-
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# PYTHON SCRIPT
-# <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-# https://github.com/MusicInTheTrees/RPGMakerVXAce/blob/main/rng/python/rng_expo_step.py

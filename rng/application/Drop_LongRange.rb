@@ -63,9 +63,9 @@ class Drop_LongRange
     
     # Do other stuff with the gun here
     
-    RNG_Drop_Article.add_article_to_party(potatoGun, 1, true)
+    RNG_Drop_Article.add_article_to_party(gun, 1, true)
     
-    return potatoGun
+    return gun
   end
   
   def drop_spray_paint(startAscension = 0, dropChance = 1)
@@ -80,7 +80,7 @@ class Drop_LongRange
     
     # Do other stuff with the sprayPaint here
     
-    RNG_Drop_Article.add_article_to_party(stopSign, 1, true)
+    RNG_Drop_Article.add_article_to_party(sprayPaint, 1, true)
     
     return sprayPaint
   end
@@ -104,7 +104,7 @@ class Drop_LongRange
   
   def drop_random_long_range(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
     if maxWeaponVersion < 1
-      maxWeaponVersion = 3
+      maxWeaponVersion = $G_MAX_WEAPON_VERSION
     end
     
     longRangeChoice = rand(maxWeaponVersion).round

@@ -24,8 +24,8 @@ class Drop_Daggers
   DBIDX_SWITCH_BLADE = 8
   DBIDX_SWITCH_BLADE_COUNT = 6
   
-  DBIDX_KITCHEN_KNIFE = 14
-  DBIDX_KITCHEN_KNIFE_COUNT = 6
+  DBIDX_CHEFS_KNIFE = 14
+  DBIDX_CHEFS_KNIFE_COUNT = 6
   
   DBIDX_MECH_PENCIL = 20
   DBIDX_MECH_PENCIL_COUNT = 6
@@ -68,21 +68,21 @@ class Drop_Daggers
     return switchBlade
   end
   
-  def drop_kitchen_knife(startAscension = 0, dropChance = 1)
-    wusthof = @drp_weapon.drop_new_weapon(DBIDX_KITCHEN_KNIFE, 
-                                          DBIDX_KITCHEN_KNIFE_COUNT, 
-                                          startAscension,
-                                          dropChance)
+  def drop_chefs_knife(startAscension = 0, dropChance = 1)
+    chefsKnife = @drp_weapon.drop_new_weapon(DBIDX_CHEFS_KNIFE, 
+                                             DBIDX_CHEFS_KNIFE_COUNT, 
+                                             startAscension,
+                                             dropChance)
     
-    if kitchenKnife == nil
+    if chefsKnife == nil
       return
     end
     
-    # Do other stuff with the kitchenKnife here
+    # Do other stuff with the chefsKnife here
     
-    RNG_Drop_Article.add_article_to_party(kitchenKnife, 1, true)
+    RNG_Drop_Article.add_article_to_party(chefsKnife, 1, true)
     
-    return kitchenKnife
+    return chefsKnife
   end
   
   def drop_mech_pencil(startAscension = 0, dropChance = 1)
@@ -105,7 +105,7 @@ class Drop_Daggers
   def drop_random_dagger(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
     
     if maxWeaponVersion < 1
-      maxWeaponVersion = 3
+      maxWeaponVersion = $G_MAX_WEAPON_VERSION
     end
     
     daggerChoice = rand(maxWeaponVersion).round
@@ -116,7 +116,7 @@ class Drop_Daggers
     when 1
       drop_switch_blade(startAscension, dropChance)
     when 2
-      drop_kitchen_knife(startAscension, dropChance)
+      drop_chefs_knife(startAscension, dropChance)
     when 3
       drop_mech_pencil(startAscension, dropChance)
     else

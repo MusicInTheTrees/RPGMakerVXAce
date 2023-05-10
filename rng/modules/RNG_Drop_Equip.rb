@@ -16,12 +16,7 @@ class RNG_Drop_Equip < RNG_Drop_Article
   end
   
   def set_equip_db_params(idx, count)
-    
     set_article_db_params(idx, count)
-    
-    #
-    # PROBLEM HERE
-    #
     @rng_equip_val.rngStepLimit = count - 1
   end
   

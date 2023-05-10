@@ -18,8 +18,8 @@
 
 class Drop_Staffs
   
-  DBIDX_STOP_SIGN = 58
-  DBIDX_STOP_SIGN_COUNT = 6
+  DBIDX_ROAD_SIGN = 58
+  DBIDX_ROAD_SIGN_COUNT = 6
   
   DBIDX_RAIN_STICK = 64
   DBIDX_RAIN_STICK_COUNT = 6
@@ -34,21 +34,21 @@ class Drop_Staffs
     @drp_weapon = RNG_Drop_Weapon.new
   end
   
-  def drop_stop_sign(startAscension = 0, dropChance = 1)
-    stopSign = @drp_weapon.drop_new_weapon(DBIDX_STOP_SIGN, 
-                                           DBIDX_STOP_SIGN_COUNT, 
+  def drop_road_sign(startAscension = 0, dropChance = 1)
+    roadSign = @drp_weapon.drop_new_weapon(DBIDX_ROAD_SIGN, 
+                                           DBIDX_ROAD_SIGN_COUNT, 
                                            startAscension,
                                            dropChance)
     
-    if stopSign == nil
+    if roadSign == nil
       return nil
     end
     
-    # Do other stuff with the stopSign here
+    # Do other stuff with the roadSign here
     
-    RNG_Drop_Article.add_article_to_party(stopSign, 1, true)
+    RNG_Drop_Article.add_article_to_party(roadSign, 1, true)
     
-    return stopSign
+    return roadSign
   end
   
   def drop_rain_stick(startAscension = 0, dropChance = 1)
@@ -104,14 +104,14 @@ class Drop_Staffs
   
   def drop_random_staff(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
     if maxWeaponVersion < 1
-      maxWeaponVersion = 3
+      maxWeaponVersion = $G_MAX_WEAPON_VERSION
     end
     
     staffChoice = rand(maxWeaponVersion).round
     
     case staffChoice
     when 0
-      drop_stop_sign(startAscension, dropChance)
+      drop_road_sign(startAscension, dropChance)
     when 1
       drop_rain_stick(startAscension, dropChance)
     when 2

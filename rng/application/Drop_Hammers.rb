@@ -48,7 +48,7 @@ class Drop_Hammers
     
     RNG_Drop_Article.add_article_to_party(easle, 1, true)
     
-    return ealse
+    return easle
   end
   
   def drop_golf_club(startAscension = 0, dropChance = 1)
@@ -104,7 +104,7 @@ class Drop_Hammers
   
   def drop_random_hammer(startAscension = 0, maxWeaponVersion = 0, dropChance = 1)
     if maxWeaponVersion < 1
-      maxWeaponVersion = 3
+      maxWeaponVersion = $G_MAX_WEAPON_VERSION
     end
     
     hammerChoice = rand(maxWeaponVersion).round
