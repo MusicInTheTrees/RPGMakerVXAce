@@ -125,18 +125,25 @@ class Drop_Daggers
   end
   
   def chest_random_dagger
-    d.drop_random_dagger($my_vars.min_ascension_level, 
-                         $my_vars.max_weapon_version)
+    drop_random_dagger($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version,
+                       $my_vars.reg_chest_drop_chance)
+  end
+                     
+  def special_chest_random_dagger
+    drop_random_dagger($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version,
+                       $my_vars.spc_chest_drop_chance)
   end
 
   def battle_random_dagger
-    d.drop_random_dagger($my_vars.min_ascension_level, 
+    drop_random_dagger($my_vars.min_ascension_level, 
                          $my_vars.max_weapon_version, 
                          $my_vars.battle_drop_chance)
   end
   
   def boss_random_dagger
-    d.drop_random_dagger($my_vars.min_ascension_level, 
+    drop_random_dagger($my_vars.min_ascension_level, 
                          $my_vars.max_weapon_version, 
                          $my_vars.boss_drop_chance)
   end

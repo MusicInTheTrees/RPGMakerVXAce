@@ -124,19 +124,26 @@ class Drop_Hammers
   end
   
   def chest_random_hammer
-    d.drop_random_hammer($my_vars.min_ascension_level, 
-                         $my_vars.max_weapon_version)
+    drop_random_hammer($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version,
+                       $my_vars.reg_chest_drop_chance)
+  end
+                     
+  def special_chest_random_hammer
+    drop_random_hammer($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version,
+                       $my_vars.spc_chest_drop_chance)
   end
 
   def battle_random_hammer
-    d.drop_random_hammer($my_vars.min_ascension_level, 
-                         $my_vars.max_weapon_version, 
-                         $my_vars.battle_drop_chance)
+    drop_random_hammer($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version, 
+                       $my_vars.battle_drop_chance)
   end
   
   def boss_random_hammer
-    d.drop_random_hammer($my_vars.min_ascension_level, 
-                         $my_vars.max_weapon_version, 
-                         $my_vars.boss_drop_chance)
+    drop_random_hammer($my_vars.min_ascension_level, 
+                       $my_vars.max_weapon_version, 
+                       $my_vars.boss_drop_chance)
   end
 end

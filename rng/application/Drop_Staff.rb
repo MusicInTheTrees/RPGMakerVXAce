@@ -124,19 +124,26 @@ class Drop_Staffs
   end
   
   def chest_random_staff
-    d.drop_random_staff($my_vars.min_ascension_level, 
-                        $my_vars.max_weapon_version)
+    drop_random_staff($my_vars.min_ascension_level, 
+                      $my_vars.max_weapon_version,
+                      $my_vars.reg_chest_drop_chance)
   end
 
+  def special_chest_random_staff
+    drop_random_staff($my_vars.min_ascension_level, 
+                      $my_vars.max_weapon_version,
+                      $my_vars.spc_chest_drop_chance)
+  end
+  
   def battle_random_staff
-    d.drop_random_staff($my_vars.min_ascension_level, 
-                        $my_vars.max_weapon_version, 
-                        $my_vars.battle_drop_chance)
+    drop_random_staff($my_vars.min_ascension_level, 
+                      $my_vars.max_weapon_version, 
+                      $my_vars.battle_drop_chance)
   end
   
   def boss_random_staff
-    d.drop_random_staff($my_vars.min_ascension_level, 
-                        $my_vars.max_weapon_version, 
-                        $my_vars.boss_drop_chance)
+    drop_random_staff($my_vars.min_ascension_level, 
+                      $my_vars.max_weapon_version, 
+                      $my_vars.boss_drop_chance)
   end
 end
